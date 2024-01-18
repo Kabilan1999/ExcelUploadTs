@@ -14,7 +14,6 @@ interface Props {
   settings: Settings
   toggleNavVisibility: () => void
   saveSettings: (values: Settings) => void
-  verticalAppBarContent?: (props?: any) => ReactNode
 }
 
 const AppBar = styled(MuiAppBar)<AppBarProps>(({ theme }) => ({
@@ -43,7 +42,7 @@ const Toolbar = styled(MuiToolbar)<ToolbarProps>(({ theme }) => ({
 
 const LayoutAppBar = (props: Props) => {
   // ** Props
-  const { settings, verticalAppBarContent: userVerticalAppBarContent } = props
+  const { settings } = props
 
   // ** Hooks
   const theme = useTheme()
@@ -61,7 +60,6 @@ const LayoutAppBar = (props: Props) => {
           })
         }}
       >
-        {(userVerticalAppBarContent && userVerticalAppBarContent(props)) || null}
       </Toolbar>
     </AppBar>
   )
