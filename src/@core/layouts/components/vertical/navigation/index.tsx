@@ -32,7 +32,6 @@ interface Props {
   verticalNavItems?: VerticalNavItemsType
   saveSettings: (values: Settings) => void
   verticalNavMenuContent?: (props?: any) => ReactNode
-  afterVerticalNavMenuContent?: (props?: any) => ReactNode
   beforeVerticalNavMenuContent?: (props?: any) => ReactNode
 }
 
@@ -54,7 +53,6 @@ const Navigation = (props: Props) => {
   // ** Props
   const {
     hidden,
-    afterVerticalNavMenuContent,
     beforeVerticalNavMenuContent,
     verticalNavMenuContent: userVerticalNavMenuContent
   } = props
@@ -145,7 +143,6 @@ const Navigation = (props: Props) => {
           </Box>
         </ScrollWrapper>
       </Box>
-      {afterVerticalNavMenuContent ? afterVerticalNavMenuContent(props) : null}
     </Drawer>
   )
 }

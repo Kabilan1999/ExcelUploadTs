@@ -37,7 +37,6 @@ export type LayoutProps = {
   verticalAppBarContent?: (props?: any) => ReactNode
   verticalNavMenuContent?: (props?: any) => ReactNode
   verticalNavMenuBranding?: (props?: any) => ReactNode
-  afterVerticalNavMenuContent?: (props?: any) => ReactNode
   beforeVerticalNavMenuContent?: (props?: any) => ReactNode
 }
 
