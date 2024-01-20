@@ -10,13 +10,8 @@ const navigation = (): VerticalNavItemsType => {
     {
       title: 'Dashboard',
       icon: HomeOutline,
-      path: '/'
-    },
-    {
-      title: 'Login',
-      icon: Login,
-      path: '/pages/login',
-      openInNewTab: true
+      path: '/home',
+      openInNewTab: false
     }
   ]
 }
