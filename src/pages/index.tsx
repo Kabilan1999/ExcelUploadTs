@@ -38,8 +38,10 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration'
+import { loginData } from './loginData'
 
 interface State {
+  username: string
   password: string
   showPassword: boolean
 }
@@ -65,6 +67,7 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 const LoginPage = () => {
   // ** State
   const [values, setValues] = useState<State>({
+    username: '',
     password: '',
     showPassword: false
   })
@@ -73,14 +76,35 @@ const LoginPage = () => {
   const theme = useTheme()
   const router = useRouter()
 
-  const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const fieldName: string = event.target.name
+    setValues({ ...values, [fieldName]: event.target.value })
+    setError(false)
   }
 
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword })
   }
+  const [error, setError] = useState<boolean>(false)
+  const handleLogin = () => {
+    setValues({ ...values, showPassword: !values.showPassword })
+    const filterValue: any[] = loginData.filter(e => {
+      if (values?.username === e?.username && values?.password === e?.password) {
+        return true
+      }
 
+      return false
+    })
+    debugger
+    if (filterValue.length === 1) {
+      router.push({
+        pathname: '/home',
+        query: { data: values.username }
+      })
+    } else {
+      setError(true)
+    }
+  }
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
   }
@@ -169,14 +193,23 @@ const LoginPage = () => {
             <Typography variant='body2'>Please sign-in to your account and start the adventure</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
-            <TextField autoFocus fullWidth id='email' label='Email' sx={{ marginBottom: 4 }} />
+            <TextField
+              autoFocus
+              name='username'
+              onChange={handleChange}
+              fullWidth
+              id='Username'
+              label='Username'
+              sx={{ marginBottom: 4 }}
+            />
             <FormControl fullWidth>
               <InputLabel htmlFor='auth-login-password'>Password</InputLabel>
               <OutlinedInput
                 label='Password'
                 value={values.password}
                 id='auth-login-password'
-                onChange={handleChange('password')}
+                name='password'
+                onChange={handleChange}
                 type={values.showPassword ? 'text' : 'password'}
                 endAdornment={
                   <InputAdornment position='end'>
@@ -194,31 +227,16 @@ const LoginPage = () => {
             </FormControl>
             <Box
               sx={{ mb: 4, display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}
-            >
-              <FormControlLabel control={<Checkbox />} label='Remember Me' />
-              <Link passHref href='/'>
-                <LinkStyled onClick={e => e.preventDefault()}>Forgot Password?</LinkStyled>
-              </Link>
-            </Box>
-            <Button
-              fullWidth
-              size='large'
-              variant='contained'
-              sx={{ marginBottom: 7 }}
-              onClick={() => router.push('/home')}
-            >
+            ></Box>
+            {error && (
+              <Typography sx={{ color: 'red', marginBottom: 7 }}>
+                {' '}
+                Please enter valid credentials to proceed!
+              </Typography>
+            )}
+            <Button fullWidth size='large' variant='contained' sx={{ marginBottom: 7 }} onClick={handleLogin}>
               Login
             </Button>
-            <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
-              <Typography variant='body2' sx={{ marginRight: 2 }}>
-                New on our platform?
-              </Typography>
-              <Typography variant='body2'>
-                <Link passHref href='/pages/register'>
-                  <LinkStyled>Create an account</LinkStyled>
-                </Link>
-              </Typography>
-            </Box>
             <Divider sx={{ my: 5 }}>or</Divider>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Link href='/' passHref>
