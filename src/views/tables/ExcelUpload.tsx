@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, SvgIcon } from '@mui/material'
 import { ExcelRenderer } from 'react-excel-renderer'
-import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
+import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon'
 import { Column } from 'material-table'
 
 interface ExcelUploadProps {
@@ -10,34 +10,35 @@ interface ExcelUploadProps {
   filteredData: any[]
 }
 
-const ExcelUpload: React.FC<ExcelUploadProps> = ({ setFilteredData, setColumnHeaders, filteredData }) => {
+const ExcelUpload: React.FC<ExcelUploadProps> = ({ setFilteredData, setColumnHeaders }) => {
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-
     if (file) {
-      ExcelRenderer(file, (err, resp) => {
+      ExcelRenderer(file, (err: string, resp: any) => {
         if (err) {
           console.error(err)
         } else {
           let [header, ...rows] = resp.rows
-          debugger
-          header = ['SL.NO', ...header]
-          debugger
-          const columnsData: Column<filteredData>[] = header.map((col: string) => ({
+          header = [...header]
+          const columnsData: Column<any>[] = header.map((col: string) => ({
             title: col,
             field: col
           }))
-          setColumnHeaders(columnsData)
-          setFilteredData(
-            rows.map((row: string[], i: number) => {
-              const rowData: filteredData = {}
-              columnsData.forEach((col, index) => {
-                rowData[col.field] = row[index]
-              })
-              rowData['SL.NO'] = i + 1
-              return rowData
+          const rowDetails = rows.map((row: string[]) => {
+            const rowData: any = {}
+            columnsData.forEach((col: any, index) => {
+              rowData[col.field] = row[index]
             })
-          )
+
+            return rowData
+          })
+          const columnsDataSlno = [
+            { title: 'Sl.no', field: 'Sl.no', render: (rowData: any) => rowDetails.indexOf(rowData) + 1 },
+            ...columnsData
+          ]
+          const filteredColumns = columnsDataSlno.filter((column: any) => isNaN(column.title))
+          setColumnHeaders(filteredColumns)
+          setFilteredData(rowDetails)
         }
       })
     }

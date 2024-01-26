@@ -89,6 +89,9 @@ const VerticalNavLink = ({ item, navVisible, toggleNavVisibility }: Props) => {
           className={isNavLinkActive() ? 'active' : ''}
           {...(item.openInNewTab ? { target: '_blank' } : null)}
           onClick={e => {
+            if (typeof window !== 'undefined' && item?.title==='Login') {
+              localStorage.removeItem('loginDetails');
+            } 
             if (item.path === undefined) {
               e.preventDefault()
               e.stopPropagation()

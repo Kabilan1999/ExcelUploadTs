@@ -55,6 +55,7 @@
     "@mui/lab": "^5.0.0-alpha.70",
     "@mui/material": "^5.15.5",
     "@popperjs/core": "^2.11.2",
+    "@reduxjs/toolkit": "^2.1.0",
     "apexcharts-clevision": "3.28.5",
     "clsx": "^1.1.1",
     "material-table": "^2.0.5",
@@ -68,6 +69,7 @@
     "react-excel-renderer": "^1.1.0",
     "react-perfect-scrollbar": "^1.5.8",
     "react-popper": "^2.2.5",
+    "react-redux": "^7.2.9",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

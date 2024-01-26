@@ -1,5 +1,5 @@
 // ** React Imports
-import { ChangeEvent, MouseEvent, ReactNode, useState } from 'react'
+import { ChangeEvent, MouseEvent, ReactNode, useEffect, useState } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
@@ -9,7 +9,6 @@ import { useRouter } from 'next/router'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
-import Checkbox from '@mui/material/Checkbox'
 import TextField from '@mui/material/TextField'
 import InputLabel from '@mui/material/InputLabel'
 import Typography from '@mui/material/Typography'
@@ -20,7 +19,6 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 import { styled, useTheme } from '@mui/material/styles'
 import MuiCard, { CardProps } from '@mui/material/Card'
 import InputAdornment from '@mui/material/InputAdornment'
-import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 
 // ** Icons Imports
 import Google from 'mdi-material-ui/Google'
@@ -39,6 +37,8 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration'
 import { loginData } from './loginData'
+import { useDispatch } from 'react-redux'
+import { storeLoginData } from 'src/redux/slice'
 
 interface State {
   username: string
@@ -49,19 +49,6 @@ interface State {
 // ** Styled Components
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: '28rem' }
-}))
-
-const LinkStyled = styled('a')(({ theme }) => ({
-  fontSize: '0.875rem',
-  textDecoration: 'none',
-  color: theme.palette.primary.main
-}))
-
-const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ theme }) => ({
-  '& .MuiFormControlLabel-label': {
-    fontSize: '0.875rem',
-    color: theme.palette.text.secondary
-  }
 }))
 
 const LoginPage = () => {
@@ -85,8 +72,19 @@ const LoginPage = () => {
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword })
   }
+  if (typeof window !== 'undefined') {
+  const isLoggedIn = localStorage?.getItem('loginDetails')
+  if (isLoggedIn) {
+    router.push({
+      pathname: '/home',
+      query: { data: isLoggedIn }
+    })
+  }
+}
+
   const [error, setError] = useState<boolean>(false)
-  const handleLogin = () => {
+  const dispatch = useDispatch()
+  const handleLogin = async () => {
     setValues({ ...values, showPassword: !values.showPassword })
     const filterValue: any[] = loginData.filter(e => {
       if (values?.username === e?.username && values?.password === e?.password) {
@@ -95,8 +93,11 @@ const LoginPage = () => {
 
       return false
     })
-    debugger
     if (filterValue.length === 1) {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('loginDetails', filterValue[0]?.username)
+      }
+      dispatch(storeLoginData(filterValue[0]))
       router.push({
         pathname: '/home',
         query: { data: values.username }
